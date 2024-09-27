@@ -24,11 +24,15 @@ label {
 }
 
 .formError {
-  color: red;
+  color: orangered;
   margin-bottom: 16px;
   font-size: 14px;
 }
 
+.btnWrap {
+  padding: 0 80px;
+}
+
 .formBtn {
-  width: 180px;
+  width: 160px;
 }

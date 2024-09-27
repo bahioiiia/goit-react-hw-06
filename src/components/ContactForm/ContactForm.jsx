@@ -75,7 +75,7 @@ export default function ContactForm() {
             component="span"
           />
         </div>
-        <div>
+        <div className={css.btnWrap}>
           <button className={css.formBtn} type="submit">
             <IoPersonAdd /> Add contact
           </button>
