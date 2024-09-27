@@ -1,20 +1,25 @@
 import { IoPerson, IoCallSharp } from "react-icons/io5";
 import css from "./Contact.module.css";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/contactsSlice";
 
-export default function Contact({ data: { id, name, number }, onDelete }) {
+export default function Contact({ contact }) {
+  const dispatch = useDispatch();
+  const handleDelete = () => dispatch(deleteContact(contact.id));
+
   return (
     <div className={css.contactContainer}>
       <ul>
         <li className={css.contactWraper}>
           <IoPerson />
-          {name}
+          {contact.name}
         </li>
         <li className={css.contactWraper}>
           <IoCallSharp />
-          {number}
+          {contact.number}
         </li>
       </ul>
-      <button className={css.contactBtn} onClick={() => onDelete(id)}>
+      <button className={css.contactBtn} onClick={handleDelete}>
         Delete
       </button>
     </div>

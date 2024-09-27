@@ -1,11 +1,27 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useId } from "react";
-import { nanoid } from "nanoid";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { nanoid } from "nanoid";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contactsSlice";
+import { IoPersonAdd } from "react-icons/io5"
 import css from "./ContactForm.module.css";
-import { IoPersonAdd } from "react-icons/io5";
 
-const FeedbackSchema = Yup.object().shape({
+export default function ContactForm() {
+  const dispatch = useDispatch();
+
+  const handleSubmit = (values, actions) => {
+    dispatch(
+      addContact({
+        id: nanoid(),
+        name: values.name,
+        number: values.number,
+      })
+    );
+
+    actions.resetForm();
+  };
+
+  const UserSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, "Too Short!")
     .max(50, "Too Long!")
@@ -18,64 +34,52 @@ const FeedbackSchema = Yup.object().shape({
     .min(9, "Too Short!")
     .max(9, "Too Long!")
     .required("Required"),
-});
-
-const initialValues = {
-  name: "",
-  number: "",
-};
-
-export default function ContactForm({ onAdd }) {
-  const userNameId = useId();
-  const userNumber = useId();
-  const newContactId = nanoid();
-
-  const handleSubmit = (values, actions) => {
-    values.id = newContactId;
-    onAdd(values);
-    actions.resetForm();
-  };
-
+  });
+  
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{
+        name: "",
+        number: "",
+        id: "",
+      }}
       onSubmit={handleSubmit}
-      validationSchema={FeedbackSchema}
+      validationSchema={UserSchema}
     >
       <Form className={css.formContainer}>
         <div className={css.formWrap}>
-          <label htmlFor={userNameId}>Name</label>
+          <label htmlFor="name">Name</label>
           <Field
+            className={css.formInput}
+            id="name"
             type="text"
-            className={css.formInput}
             name="name"
-            id={userNameId}
-          />
+          ></Field>
           <ErrorMessage
             className={css.formError}
             name="name"
             component="span"
           />
         </div>
-
         <div className={css.formWrap}>
-          <label htmlFor={userNumber}>Number</label>
+          <label htmlFor="number">Number</label>
           <Field
-            type="tel"
             className={css.formInput}
+            id="number"
+            type="text"
             name="number"
-            id={userNumber}
-          />
+          ></Field>
           <ErrorMessage
             className={css.formError}
             name="number"
             component="span"
           />
         </div>
-
-        <button type="submit" className={css.formBtn}>
-          <IoPersonAdd /> Add contact
-        </button>
+        <div>
+          <button className={css.formBtn} type="submit">
+            <IoPersonAdd /> Add contact
+          </button>
+        </div>
       </Form>
     </Formik>
   );
